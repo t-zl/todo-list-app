@@ -1,4 +1,5 @@
-# TL ToDo App Built With TypeScript
+# ToDo App Built With TypeScript
+# Thomas Lavelle
 > ✨ Bootstrapped with Create Snowpack App (CSA).
 
 ### npm start
@@ -11,7 +12,6 @@ You will also see any lint errors in the console.
 
 - Add, Tick-off and Delete your tasks.
 
-
 ---------------------------------------
-created on 18/07/2024 by Thomas Lavelle
+created on 18/07/2024 by Thomas Lavelle - uploaded to personal GitHub on 14/10/2024
 ---------------------------------------
