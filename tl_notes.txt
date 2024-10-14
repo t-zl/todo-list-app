@@ -1,0 +1,95 @@
+// ORIGINAL VERSION OF INDEX.TS WITH MY COMMENTS BEFORE I REFACTORED IT.
+
+
+import { v4 as uuidv4 } from "uuid";
+
+// initialise a Task type
+type Task = {
+  id: string,s
+  title: string,
+  completed: boolean,
+  createdAt: Date
+}
+
+const list = document.querySelector<HTMLUListElement>('#list')
+const form = document.getElementById("new-task-form") as HTMLFormElement | null
+const input = document.querySelector<HTMLInputElement>('#new-task-title')
+
+const tasks: Task[] = loadTasks()
+tasks.forEach(addListItem)
+
+
+form?.addEventListener("submit", (e) => {
+  e.preventDefault()
+  
+  if (input?.value == "" || input?.value == null) return
+
+  const newTask: Task = {
+    id: uuidv4(),
+    title: input.value,
+    completed: false,
+    createdAt: new Date()
+  }
+
+  tasks.push(newTask)
+
+  addListItem(newTask)
+  input.value = ""  // clear the input field after adding the task
+})
+
+
+
+
+// declare functions
+
+function addListItem(task: Task) {
+  const item = document.createElement('li')
+  item.id = task.id // set the id of the list item to the task id
+  const label = document.createElement('label')
+  const checkbox = document.createElement('input')
+  const removeButton = document.createElement('button')
+
+  // set up the remove button
+  removeButton.textContent = "X"
+
+  // add event listener to the remove button
+  removeButton.addEventListener("click", (e) => {     // changed the event listener so it is just for the remove button
+    e.stopPropagation(); // Prevent click event from bubbling to the list's click listener
+    const taskItem = removeButton.parentElement?.parentElement as HTMLLIElement;
+    const taskId = taskItem.id;
+    removeTask(taskId);
+    taskItem.remove();
+  })
+
+  checkbox.addEventListener("change", (e) => {
+    task.completed = checkbox.checked
+    console.log(tasks) // log the tasks array to see the changes
+    saveTasks() // save the tasks to local storage
+  })
+  checkbox.type = "checkbox"
+  checkbox.checked = task.completed
+  label.append(checkbox, task.title, removeButton)
+  item.append(label)
+  list?.append(item) // question mark is used to avoid null error
+}
+
+
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks))
+}
+
+function loadTasks(): Task[] {
+  const taskJSON = localStorage.getItem("tasks")
+  if (taskJSON == null) return []
+  return JSON.parse(taskJSON)
+}
+
+
+// remove task function - this function will remove a task from the tasks array
+function removeTask(id: string) {
+  const taskIndex = tasks.findIndex((task) => task.id === id)
+  if (taskIndex > -1) {
+    tasks.splice(taskIndex, 1)  //splice method removes the element from the array
+    saveTasks()
+  }
+}
